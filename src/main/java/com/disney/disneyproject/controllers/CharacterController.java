@@ -26,7 +26,7 @@ public class CharacterController {
     public ResponseEntity<CharacterDTO> SaveNewCharacter(@RequestBody CharacterDTO characterDTO){
         return ResponseEntity.ok(characterService.CreateCharcarter(characterDTO));
     }
-    @PutMapping("/uddate/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CharacterDTO>  UpdateCharacter(@PathVariable long id, @RequestBody CharacterDTO characterDTO){
         return ResponseEntity.ok(characterService.UpdateCharcter(id,characterDTO));
     }
@@ -34,4 +34,6 @@ public class CharacterController {
     public void DeleteCharacter(@PathVariable long id){
         characterService.DeleteCharacterById(id);
     }
+
+
 }

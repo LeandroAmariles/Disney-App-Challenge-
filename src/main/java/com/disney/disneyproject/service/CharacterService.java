@@ -16,4 +16,6 @@ public interface CharacterService {
     public void DeleteCharacterById(Long characterId);
 
     public Set<CharacterDTO> GetCharacterList();
+
+    public CharacterDTO CharacterDetails(long id);
 }

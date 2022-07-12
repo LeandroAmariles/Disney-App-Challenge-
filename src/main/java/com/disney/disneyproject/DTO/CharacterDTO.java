@@ -21,6 +21,8 @@ public class CharacterDTO {
     @Size(min=15, message = "The history should be longer ")
     private String history;
 
+
+
     public CharacterDTO(){
 
     }
@@ -32,6 +34,7 @@ public class CharacterDTO {
         this.age = age;
         this.weight = weiht;
         this.history = history;
+
 
     }
 
@@ -82,5 +85,14 @@ public class CharacterDTO {
     public void setHistory(String history) {
         this.history = history;
     }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
 
 }

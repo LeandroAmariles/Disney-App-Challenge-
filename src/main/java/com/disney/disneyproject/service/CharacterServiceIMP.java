@@ -1,7 +1,9 @@
 package com.disney.disneyproject.service;
 
 import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.exceptions.ResourceNotFoundException;
 import com.disney.disneyproject.repository.CharacterRepository;
+import com.disney.disneyproject.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.disney.disneyproject.entities.Character;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ public class CharacterServiceIMP implements CharacterService{
     @Autowired
     private CharacterRepository characterRepository;
 
-
+    @Autowired
+    private MovieRepository movieRepository;
 
     @Override
     public CharacterDTO CreateCharcarter(CharacterDTO characterDTO) {
@@ -32,16 +35,17 @@ public class CharacterServiceIMP implements CharacterService{
 
     @Override
     public CharacterDTO UpdateCharcter(Long characterId, CharacterDTO characterSolicited) {
-        Character character = characterRepository.findById(characterId).orElseThrow();
+        Character character = characterRepository.findById(characterId).orElseThrow(()->new ResourceNotFoundException("Character","id",characterId));
         character.setName(characterSolicited.getName());
-        character.setPkCharacterId(characterId);
         character.setImage(characterSolicited.getImage());
         character.setHistory(characterSolicited.getHistory());
         character.setAge(characterSolicited.getAge());
         character.setWeiht(characterSolicited.getWeiht());
 
+        characterRepository.save(character);
 
-        return null;
+        CharacterDTO characterDTO=mappingDTO(character);
+        return characterDTO;
     }
 
     @Override
@@ -55,6 +59,15 @@ public class CharacterServiceIMP implements CharacterService{
         List<Character> list = characterRepository.findAll();
         Set<CharacterDTO> listDTO = list.stream().map(character -> mappingDTO(character)).collect(Collectors.toSet());
         return listDTO;
+    }
+
+    @Override
+    public CharacterDTO CharacterDetails(long id) {
+        Character character= characterRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Character","id",id));
+        character.setMovies(characterRepository.findById(id).get().getMovies());
+        CharacterDTO characterDTO = mappingDTO(character);
+
+        return characterDTO;
     }
 
     private Character mappingEntity(CharacterDTO character){
