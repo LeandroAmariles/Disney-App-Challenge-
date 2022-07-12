@@ -23,13 +23,14 @@ public class Character {
 
     }
 
-    public Character(long id, String name, String image, int age, double weiht, String history, List<Movie> movies) {
+    public Character(long id, String name, String image, int age, double weight, String history, List<Movie> movies) {
         this.pkCharacterId = id;
         this.name = name;
         this.image = image;
         this.age = age;
-        this.weight = weiht;
+        this.weight = weight;
         this.history = history;
+
         this.movies = movies;
     }
 
