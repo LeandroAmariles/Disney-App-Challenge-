@@ -2,6 +2,7 @@ package com.disney.disneyproject.controllers;
 
 import com.disney.disneyproject.DTO.CharacterANS;
 import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.DTO.CharacterFilter;
 import com.disney.disneyproject.entities.Character;
 import com.disney.disneyproject.service.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping
+@RequestMapping()
 public class CharacterController {
 
     @Autowired
@@ -37,9 +38,19 @@ public class CharacterController {
         characterService.DeleteCharacterById(id);
 
     }
-    @GetMapping("details/{id}")
-    public ResponseEntity<CharacterDTO> CharacterDetails(@PathVariable long id){
+    @GetMapping("/details/{id}")
+    public ResponseEntity<CharacterANS> CharacterDetails(@PathVariable long id){
         return new ResponseEntity<>(characterService.CharacterDetails(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/Characters/{name}")
+    public ResponseEntity<List<CharacterFilter>> filterByName(@PathVariable String name){
+        return new ResponseEntity<>(characterService.findByName(name),HttpStatus.OK);
+    }
+
+    @GetMapping(params="age")
+    public ResponseEntity<List<CharacterDTO>> filterByAge(@RequestParam(value = "age") int age){
+        return new ResponseEntity<>(characterService.findByAge(age),HttpStatus.OK);
     }
 
 

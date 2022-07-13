@@ -2,6 +2,7 @@ package com.disney.disneyproject.service;
 
 import com.disney.disneyproject.DTO.CharacterANS;
 import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.DTO.CharacterFilter;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.entities.Movie;
 import com.disney.disneyproject.exceptions.ResourceNotFoundException;
@@ -31,7 +32,7 @@ public class CharacterServiceIMP implements CharacterService{
     public CharacterANS CreateCharcarter(CharacterANS characterANS) {
         Character character= AnsToEntity(characterANS);
         List<MovieDTO> movies = characterANS.getMovieList();
-        List<Movie> moviesAdd=movies.stream().map(movieDTO -> MappingToEntity(movieDTO) ).collect(Collectors.toList());
+        List<Movie> moviesAdd=movies.stream().map(movieDTO -> movieServiceIMP.MappingToEntity(movieDTO) ).collect(Collectors.toList());
         character.setMovies(moviesAdd);
         Character Character1=characterRepository.save(character);
         CharacterDTO characterDTO1=mappingDTO(character);
@@ -68,13 +69,29 @@ public class CharacterServiceIMP implements CharacterService{
     }
 
     @Override
-    public CharacterDTO CharacterDetails(long id) {
+    public CharacterANS CharacterDetails(long id) {
         Character character= characterRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Character","id",id));
-        character.setMovies(characterRepository.findById(id).get().getMovies());
-        CharacterDTO characterDTO = mappingDTO(character);
-
-        return characterDTO;
+        List<Movie> list=character.getMovies();
+        List<MovieDTO> movieDTOList = list.stream().map(movie -> movieServiceIMP.MappingToDTO(movie)).collect(Collectors.toList());
+        CharacterANS ans = EntirytoANS(character);
+        ans.setMovieList(movieDTOList);
+        return ans;
     }
+
+    @Override
+    public List<CharacterFilter> findByName(String name) {
+         List<Character> myList = characterRepository.findByName(name);
+         List<CharacterFilter> listF = myList.stream().map(character -> MappingToFilter(character)).collect(Collectors.toList());
+         return listF;
+    }
+
+    @Override
+    public List<CharacterDTO> findByAge(int age) {
+        List<Character> mylist = characterRepository.findByAge(age);
+        List<CharacterDTO> list = mylist.stream().map(character -> mappingDTO(character)).collect(Collectors.toList());
+        return list;
+    }
+
 
     private Character mappingEntity(CharacterDTO character){
         Character newCharacter = new Character();
@@ -138,6 +155,13 @@ public class CharacterServiceIMP implements CharacterService{
         movie1.setTitle(movieDTO.getTitle());
 
         return movie1;
+    }
+
+    private CharacterFilter MappingToFilter(Character character){
+        CharacterFilter characterFilter=new CharacterFilter();
+        characterFilter.setName(character.getName());
+        characterFilter.setImage(character.getImage());
+        return characterFilter;
     }
 
 

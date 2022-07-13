@@ -2,6 +2,8 @@ package com.disney.disneyproject.service;
 
 import com.disney.disneyproject.DTO.CharacterANS;
 import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.DTO.CharacterFilter;
+import com.disney.disneyproject.entities.Character;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,5 +20,12 @@ public interface CharacterService {
 
     public Set<CharacterDTO> GetCharacterList();
 
-    public CharacterDTO CharacterDetails(long id);
+    public CharacterANS CharacterDetails(long id);
+
+    public List<CharacterFilter> findByName(String name);
+
+    public List<CharacterDTO> findByAge(int Age);
+
+
+
 }
