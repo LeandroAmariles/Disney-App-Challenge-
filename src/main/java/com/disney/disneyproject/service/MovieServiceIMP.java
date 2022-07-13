@@ -32,8 +32,9 @@ public class MovieServiceIMP implements MovieService{
     }
 
     @Override
-    public MovieDTO CreatingMovie(MovieDTO movieDTO) {
+    public MovieDTO CreatingMovie(MovieDTO movieDTO, List<Character> characterList) {
         Movie movie = MappingToEntity(movieDTO);
+        movie.setAssociateCharacters(characterList);
         movieRepository.save(movie);
         return movieDTO;
     }
@@ -43,7 +44,7 @@ public class MovieServiceIMP implements MovieService{
         return null;
     }
 
-    private MovieDTO MappingToDTO(Movie movie){
+    public MovieDTO MappingToDTO(Movie movie){
         MovieDTO movieDTO = new MovieDTO();
         movieDTO.setPkMovieId(movie.getPkMovieId());
         movieDTO.setDate(movie.getDate());
@@ -54,7 +55,7 @@ public class MovieServiceIMP implements MovieService{
         return movieDTO;
 
     }
-    private Movie MappingToEntity(MovieDTO movieDTO){
+    public Movie MappingToEntity(MovieDTO movieDTO){
         Movie movie1=new Movie();
         movie1.setPkMovieId(movieDTO.getPkMovieId());
         movie1.setImage(movieDTO.getImage());

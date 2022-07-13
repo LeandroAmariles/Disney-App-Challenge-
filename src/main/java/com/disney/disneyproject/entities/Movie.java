@@ -19,7 +19,7 @@ public class Movie {
     private List<Character> associateCharacters;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "genders_pk_gender_id")
+    @JoinColumn(name = "gender_id")
     private Gender genders;
 
     public Gender getGenders() {

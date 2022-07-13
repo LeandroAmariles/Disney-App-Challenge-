@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class MovieDTO {
     @Max(value = 5, message = "The Rating is betwen 1 - 5")
     @Min(value = 1,message = "The Rating is betwen 1-5")
     private int rating;
+
+
 
 
     public MovieDTO(){

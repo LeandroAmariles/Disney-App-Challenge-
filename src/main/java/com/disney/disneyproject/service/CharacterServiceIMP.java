@@ -1,6 +1,9 @@
 package com.disney.disneyproject.service;
 
+import com.disney.disneyproject.DTO.CharacterANS;
 import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.DTO.MovieDTO;
+import com.disney.disneyproject.entities.Movie;
 import com.disney.disneyproject.exceptions.ResourceNotFoundException;
 import com.disney.disneyproject.repository.CharacterRepository;
 import com.disney.disneyproject.repository.MovieRepository;
@@ -21,31 +24,35 @@ public class CharacterServiceIMP implements CharacterService{
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private MovieServiceIMP movieServiceIMP;
+
     @Override
-    public CharacterDTO CreateCharcarter(CharacterDTO characterDTO) {
-        Character newCharcater= mappingEntity(characterDTO);
-
-        Character Character1=characterRepository.save(newCharcater);
-
-        CharacterDTO characterDTO1=mappingDTO(newCharcater);
-
-        return characterDTO1;
+    public CharacterANS CreateCharcarter(CharacterANS characterANS) {
+        Character character= AnsToEntity(characterANS);
+        List<MovieDTO> movies = characterANS.getMovieList();
+        List<Movie> moviesAdd=movies.stream().map(movieDTO -> MappingToEntity(movieDTO) ).collect(Collectors.toList());
+        character.setMovies(moviesAdd);
+        Character Character1=characterRepository.save(character);
+        CharacterDTO characterDTO1=mappingDTO(character);
+        return characterANS;
 
     }
 
     @Override
-    public CharacterDTO UpdateCharcter(Long characterId, CharacterDTO characterSolicited) {
+    public CharacterANS UpdateCharcter(Long characterId, CharacterDTO characterSolicited) {
         Character character = characterRepository.findById(characterId).orElseThrow(()->new ResourceNotFoundException("Character","id",characterId));
         character.setName(characterSolicited.getName());
         character.setImage(characterSolicited.getImage());
         character.setHistory(characterSolicited.getHistory());
         character.setAge(characterSolicited.getAge());
-        character.setWeiht(characterSolicited.getWeiht());
-
+        character.setWeiht(characterSolicited.getWeight());
         characterRepository.save(character);
-
-        CharacterDTO characterDTO=mappingDTO(character);
-        return characterDTO;
+        List<Movie> movies = character.getMovies();
+        List<MovieDTO> moviesAdd =movies.stream().map(movie -> movieServiceIMP.MappingToDTO(movie)).collect(Collectors.toList());
+        CharacterANS ans = EntirytoANS(character);
+        ans.setMovieList(moviesAdd);
+        return ans;
     }
 
     @Override
@@ -55,7 +62,6 @@ public class CharacterServiceIMP implements CharacterService{
 
     @Override
     public Set<CharacterDTO> GetCharacterList() {
-
         List<Character> list = characterRepository.findAll();
         Set<CharacterDTO> listDTO = list.stream().map(character -> mappingDTO(character)).collect(Collectors.toSet());
         return listDTO;
@@ -74,7 +80,7 @@ public class CharacterServiceIMP implements CharacterService{
         Character newCharacter = new Character();
         newCharacter.setPkCharacterId(character.getPkCharacterId());
         newCharacter.setName(character.getName());
-        newCharacter.setWeiht(character.getWeiht());
+        newCharacter.setWeiht(character.getWeight());
         newCharacter.setAge(character.getAge());
         newCharacter.setHistory(character.getHistory());
         newCharacter.setImage(character.getImage());
@@ -88,7 +94,51 @@ public class CharacterServiceIMP implements CharacterService{
         characterDTO.setHistory(character.getHistory());
         characterDTO.setImage(character.getImage());
         characterDTO.setName(character.getName());
-        characterDTO.setWeiht(characterDTO.getWeiht());
+        characterDTO.setWeight(characterDTO.getWeight());
         return characterDTO;
     }
+
+    private CharacterDTO mappingDTO(CharacterANS character){
+        CharacterDTO characterDTO=new CharacterDTO();
+        characterDTO.setPkCharacterId(character.getPkCharacterId());
+        characterDTO.setAge(character.getAge());
+        characterDTO.setWeight(character.getWeight());
+        characterDTO.setName(character.getName());
+        characterDTO.setImage(character.getImage());
+        characterDTO.setHistory(character.getHistory());
+        return characterDTO;
+    }
+
+    private Character AnsToEntity(CharacterANS character){
+        Character newCharacter = new Character();
+        newCharacter.setPkCharacterId(character.getPkCharacterId());
+        newCharacter.setName(character.getName());
+        newCharacter.setAge(character.getAge());
+        newCharacter.setHistory(character.getHistory());
+        newCharacter.setImage(character.getImage());
+        newCharacter.setWeiht(character.getWeight());
+        return newCharacter;
+    }
+    private CharacterANS EntirytoANS(Character character){
+        CharacterANS newCharacter = new CharacterANS();
+        newCharacter.setPkCharacterId(character.getPkCharacterId());
+        newCharacter.setName(character.getName());
+        newCharacter.setAge(character.getAge());
+        newCharacter.setHistory(character.getHistory());
+        newCharacter.setImage(character.getImage());
+        newCharacter.setWeight(character.getWeiht());
+        return newCharacter;
+    }
+    private Movie MappingToEntity(MovieDTO movieDTO){
+        Movie movie1=new Movie();
+        movie1.setPkMovieId(movieDTO.getPkMovieId());
+        movie1.setImage(movieDTO.getImage());
+        movie1.setDate(movieDTO.getDate());
+        movie1.setRating(movieDTO.getRating());
+        movie1.setTitle(movieDTO.getTitle());
+
+        return movie1;
+    }
+
+
 }

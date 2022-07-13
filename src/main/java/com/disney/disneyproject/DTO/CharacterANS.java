@@ -1,45 +1,40 @@
-package com.disney.disneyproject.entities;
+package com.disney.disneyproject.DTO;
+
+import com.disney.disneyproject.entities.Movie;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name="characters")
-public class Character {
+public class CharacterANS {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long pkCharacterId;
     private String name;
     private String image;
     private int age;
     private double weight;
     private String history;
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinTable(name = "characters_movies", joinColumns = {@JoinColumn(name = "pk_characterid", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "pk_movieid", nullable = false)})
-    private List<Movie> movies;
+    private List<MovieDTO> movieList = new ArrayList<>();
 
-    public Character(){
-
-    }
-
-    public Character(long id, String name, String image, int age, double weight, String history, List<Movie> movies) {
-        this.pkCharacterId = id;
+    public CharacterANS(long pkCharacterId, String name, String image, int age, double weight, String history, List<MovieDTO> movieList) {
+        this.pkCharacterId = pkCharacterId;
         this.name = name;
         this.image = image;
         this.age = age;
         this.weight = weight;
         this.history = history;
+        this.movieList = movieList;
+    }
+    public CharacterANS(){
 
-        this.movies = movies;
     }
 
     public long getPkCharacterId() {
         return pkCharacterId;
     }
 
-    public void setPkCharacterId(long id) {
-        this.pkCharacterId = id;
+    public void setPkCharacterId(long pkCharacterId) {
+        this.pkCharacterId = pkCharacterId;
     }
 
     public String getName() {
@@ -66,12 +61,12 @@ public class Character {
         this.age = age;
     }
 
-    public double getWeiht() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeiht(double weiht) {
-        this.weight = weiht;
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public String getHistory() {
@@ -82,11 +77,11 @@ public class Character {
         this.history = history;
     }
 
-    public List<Movie> getMovies() {
-        return movies;
+    public List<MovieDTO> getMovieList() {
+        return movieList;
     }
 
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    public void setMovieList(List<MovieDTO> movieList) {
+        this.movieList = movieList;
     }
 }

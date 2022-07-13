@@ -5,6 +5,7 @@ import com.disney.disneyproject.entities.Movie;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CharacterDTO {
@@ -21,18 +22,16 @@ public class CharacterDTO {
     @Size(min=15, message = "The history should be longer ")
     private String history;
 
-
-
     public CharacterDTO(){
 
     }
 
-    public CharacterDTO(long id, String name, String image, int age, double weiht, String history, List<Movie> movies) {
+    public CharacterDTO(long id, String name, String image, int age, double weight, String history, List<Movie> movies) {
         this.pkCharacterId = id;
         this.name = name;
         this.image = image;
         this.age = age;
-        this.weight = weiht;
+        this.weight = weight;
         this.history = history;
 
 
@@ -70,13 +69,6 @@ public class CharacterDTO {
         this.age = age;
     }
 
-    public double getWeiht() {
-        return weight;
-    }
-
-    public void setWeiht(double weiht) {
-        this.weight = weiht;
-    }
 
     public String getHistory() {
         return history;
