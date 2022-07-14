@@ -42,6 +42,17 @@ public class Mapper {
         movieAns.setTitle(movie.getTitle());
         return movieAns;
     }
+    public  Movie MovieANStoEntity(MovieANS movieANS){
+        Movie movie = new Movie();
+        movie.setPkMovieId(movieANS.getPkMovieId());
+        //movie.setGenders(movieANS.getGenders());
+        movie.setTitle(movieANS.getTitle());
+        movie.setRating(movieANS.getRating());
+        movie.setDate(movieANS.getDate());
+        movieANS.setImage(movie.getImage());
+        return movie;
+
+    }
     public GenderDTO MappingToDTO(Gender gender){
         GenderDTO genderDTO = new GenderDTO();
         genderDTO.setGenderId(gender.getPkGenderId());
@@ -117,4 +128,13 @@ public class Mapper {
         characterFilter.setImage(character.getImage());
         return characterFilter;
     }
+
+    public MovieFilter MappingEToFilter(Movie movie){
+        MovieFilter movieFilter = new MovieFilter();
+        movieFilter.setDate(movie.getDate());
+        movieFilter.setTituo(movie.getTitle());
+        movieFilter.setImage(movie.getImage());
+        return movieFilter;
+    }
+
 }

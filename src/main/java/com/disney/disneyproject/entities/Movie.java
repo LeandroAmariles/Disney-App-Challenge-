@@ -15,7 +15,7 @@ public class Movie {
     private String title;
     private Date date;
     private int rating;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "movies")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, mappedBy = "movies")
     private List<Character> associateCharacters;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

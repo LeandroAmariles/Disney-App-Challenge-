@@ -3,6 +3,7 @@ package com.disney.disneyproject.service;
 import com.disney.disneyproject.DTO.CharacterDTO;
 import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
+import com.disney.disneyproject.DTO.MovieFilter;
 import com.disney.disneyproject.entities.Character;
 import com.disney.disneyproject.entities.Movie;
 import com.disney.disneyproject.exceptions.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.disney.disneyproject.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +29,10 @@ public class MovieServiceIMP implements MovieService{
     private Mapper mapper;
 
     @Override
-    public List<Movie> GetMovies() {
-       return movieRepository.findAll();
+    public List<MovieANS> GetMovies() {
+       List<Movie> list = movieRepository.findAll();
+       List<MovieANS> movieANS = list.stream().map(movie -> mapper.MappingToAns(movie)).collect(Collectors.toList());
+       return movieANS;
     }
 
     @Override
@@ -39,11 +43,13 @@ public class MovieServiceIMP implements MovieService{
     }
 
     @Override
-    public MovieDTO CreatingMovie(MovieDTO movieDTO, List<Character> characterList) {
-        Movie movie = mapper.MappingToEntity(movieDTO);
+    public MovieANS CreatingMovie(MovieANS movieANS) {
+        Movie movie = mapper.MovieANStoEntity(movieANS);
+        List<CharacterDTO> list=movieANS.getAssociateCharacters();
+        List<Character> characterList = list.stream().map(characterDTO -> mapper.mappingEntity(characterDTO)).collect(Collectors.toList());
         movie.setAssociateCharacters(characterList);
         movieRepository.save(movie);
-        return movieDTO;
+        return movieANS;
     }
 
     @Override
@@ -59,6 +65,56 @@ public class MovieServiceIMP implements MovieService{
         MovieANS movieANS = mapper.MappingToAns(movie);
         movieANS.setAssociateCharacters(characterDTOS);
         return movieANS;
+    }
+
+    @Override
+    public MovieANS UpdateMovie(long idMovie, MovieDTO movieDTO) {
+        Movie movie = movieRepository.findById(idMovie).orElseThrow(()-> new ResourceNotFoundException("Movie","id",idMovie));
+        movie.setRating(movieDTO.getRating());
+        movie.setTitle(movieDTO.getTitle());
+        movie.setDate(movieDTO.getDate());
+        movie.setImage(movie.getImage());
+        movieRepository.save(movie);
+        List<Character> characters = movie.getAssociateCharacters();
+        MovieANS movieANS = mapper.MappingToAns(movie);
+        movieANS.setAssociateCharacters(characters.stream().map(character -> mapper.mappingDTO(character)).collect(Collectors.toList()));
+        return movieANS;
+    }
+
+    @Override
+    public void DeleteMovie(long id) {
+        movieRepository.deleteById(id);
+    }
+
+    @Override
+    public MovieFilter findByTitle(String title) {
+        Movie movie = movieRepository.findByTitle(title);
+        MovieFilter movieFilter = mapper.MappingEToFilter(movie);
+        return movieFilter;
+    }
+
+    @Override
+    public MovieFilter findByMovieId(long id) {
+        Movie movie= movieRepository.findByPkMovieId(id);
+        MovieFilter movieFilter = mapper.MappingEToFilter(movie);
+        return movieFilter;
+    }
+
+    @Override
+    public MovieFilter findByDate(Date date) {
+        Movie movie = movieRepository.findByDateEquals(date);
+        MovieFilter movieFilter = mapper.MappingEToFilter(movie);
+        return movieFilter;
+    }
+
+    @Override
+    public MovieANS AddOrDeleteCharacter(long idMovie, long idCharcater) {
+        Movie movie=movieRepository.findById(idMovie).orElseThrow(()-> new ResourceNotFoundException("Movie","id",idMovie));
+        Character character= characterRepository.findById(idCharcater).orElseThrow(()-> new ResourceNotFoundException("Character","id",idCharcater));
+
+
+
+        return null;
     }
 
 
