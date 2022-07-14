@@ -22,9 +22,11 @@ public interface CharacterService {
 
     public CharacterANS CharacterDetails(long id);
 
-    public List<CharacterFilter> findByName(String name);
+    public Set<CharacterFilter> findByName(String name);
 
-    public List<CharacterDTO> findByAge(int Age);
+    public Set<CharacterFilter> findByAge(int Age);
+
+    public Set<CharacterFilter> GetCharactersFilter();
 
 
 

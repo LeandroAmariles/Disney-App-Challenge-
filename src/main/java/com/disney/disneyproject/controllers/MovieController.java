@@ -1,6 +1,7 @@
 package com.disney.disneyproject.controllers;
 
 
+import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.entities.Movie;
 import com.disney.disneyproject.service.MovieService;
@@ -26,6 +27,13 @@ public class MovieController {
     public ResponseEntity<List<Movie>> GetMovies(){
         return new ResponseEntity<>(movieService.GetMovies(),HttpStatus.OK);
     }
+
+    @GetMapping("/movie_details/{id}")
+    public ResponseEntity<MovieANS> GetDetailMovie(@PathVariable long id){
+        return new ResponseEntity<>(movieService.GetMovieDetails(id),HttpStatus.OK);
+    }
+
+
 
 
 }

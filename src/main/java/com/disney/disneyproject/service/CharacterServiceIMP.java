@@ -26,16 +26,16 @@ public class CharacterServiceIMP implements CharacterService{
     private MovieRepository movieRepository;
 
     @Autowired
-    private MovieServiceIMP movieServiceIMP;
+    public Mapper mapper;
 
     @Override
     public CharacterANS CreateCharcarter(CharacterANS characterANS) {
-        Character character= AnsToEntity(characterANS);
+        Character character= mapper.AnsToEntity(characterANS);
         List<MovieDTO> movies = characterANS.getMovieList();
-        List<Movie> moviesAdd=movies.stream().map(movieDTO -> movieServiceIMP.MappingToEntity(movieDTO) ).collect(Collectors.toList());
+        List<Movie> moviesAdd=movies.stream().map(movieDTO -> mapper.MappingToEntity(movieDTO) ).collect(Collectors.toList());
         character.setMovies(moviesAdd);
         Character Character1=characterRepository.save(character);
-        CharacterDTO characterDTO1=mappingDTO(character);
+        CharacterDTO characterDTO1=mapper.mappingDTO(character);
         return characterANS;
 
     }
@@ -50,8 +50,8 @@ public class CharacterServiceIMP implements CharacterService{
         character.setWeiht(characterSolicited.getWeight());
         characterRepository.save(character);
         List<Movie> movies = character.getMovies();
-        List<MovieDTO> moviesAdd =movies.stream().map(movie -> movieServiceIMP.MappingToDTO(movie)).collect(Collectors.toList());
-        CharacterANS ans = EntirytoANS(character);
+        List<MovieDTO> moviesAdd =movies.stream().map(movie -> mapper.MappingToDTO(movie)).collect(Collectors.toList());
+        CharacterANS ans = mapper.EntirytoANS(character);
         ans.setMovieList(moviesAdd);
         return ans;
     }
@@ -64,7 +64,7 @@ public class CharacterServiceIMP implements CharacterService{
     @Override
     public Set<CharacterDTO> GetCharacterList() {
         List<Character> list = characterRepository.findAll();
-        Set<CharacterDTO> listDTO = list.stream().map(character -> mappingDTO(character)).collect(Collectors.toSet());
+        Set<CharacterDTO> listDTO = list.stream().map(character -> mapper.mappingDTO(character)).collect(Collectors.toSet());
         return listDTO;
     }
 
@@ -72,97 +72,33 @@ public class CharacterServiceIMP implements CharacterService{
     public CharacterANS CharacterDetails(long id) {
         Character character= characterRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Character","id",id));
         List<Movie> list=character.getMovies();
-        List<MovieDTO> movieDTOList = list.stream().map(movie -> movieServiceIMP.MappingToDTO(movie)).collect(Collectors.toList());
-        CharacterANS ans = EntirytoANS(character);
+        List<MovieDTO> movieDTOList = list.stream().map(movie -> mapper.MappingToDTO(movie)).collect(Collectors.toList());
+        CharacterANS ans = mapper.EntirytoANS(character);
         ans.setMovieList(movieDTOList);
         return ans;
     }
 
     @Override
-    public List<CharacterFilter> findByName(String name) {
-         List<Character> myList = characterRepository.findByName(name);
-         List<CharacterFilter> listF = myList.stream().map(character -> MappingToFilter(character)).collect(Collectors.toList());
+    public Set<CharacterFilter> findByName(String name) {
+         Set<Character> myList = characterRepository.findByName(name);
+         Set<CharacterFilter> listF = myList.stream().map(character -> mapper.MappingToFilter(character)).collect(Collectors.toSet());
          return listF;
     }
 
     @Override
-    public List<CharacterDTO> findByAge(int age) {
-        List<Character> mylist = characterRepository.findByAge(age);
-        List<CharacterDTO> list = mylist.stream().map(character -> mappingDTO(character)).collect(Collectors.toList());
+    public Set<CharacterFilter> findByAge(int age) {
+        Set<Character> mylist = characterRepository.findByAge(age);
+        Set<CharacterFilter> list = mylist.stream().map(character -> mapper.MappingToFilter(character)).collect(Collectors.toSet());
         return list;
     }
 
-
-    private Character mappingEntity(CharacterDTO character){
-        Character newCharacter = new Character();
-        newCharacter.setPkCharacterId(character.getPkCharacterId());
-        newCharacter.setName(character.getName());
-        newCharacter.setWeiht(character.getWeight());
-        newCharacter.setAge(character.getAge());
-        newCharacter.setHistory(character.getHistory());
-        newCharacter.setImage(character.getImage());
-        return newCharacter;
+    @Override
+    public Set<CharacterFilter> GetCharactersFilter() {
+        List<Character> characters = characterRepository.findAll();
+        Set<CharacterFilter> characterFilters = characters.stream().map(character -> mapper.MappingToFilter(character)).collect(Collectors.toSet());
+        return characterFilters;
     }
 
-    private CharacterDTO mappingDTO(Character character){
-        CharacterDTO characterDTO = new CharacterDTO();
-        characterDTO.setPkCharacterId(character.getPkCharacterId());
-        characterDTO.setAge(character.getAge());
-        characterDTO.setHistory(character.getHistory());
-        characterDTO.setImage(character.getImage());
-        characterDTO.setName(character.getName());
-        characterDTO.setWeight(characterDTO.getWeight());
-        return characterDTO;
-    }
-
-    private CharacterDTO mappingDTO(CharacterANS character){
-        CharacterDTO characterDTO=new CharacterDTO();
-        characterDTO.setPkCharacterId(character.getPkCharacterId());
-        characterDTO.setAge(character.getAge());
-        characterDTO.setWeight(character.getWeight());
-        characterDTO.setName(character.getName());
-        characterDTO.setImage(character.getImage());
-        characterDTO.setHistory(character.getHistory());
-        return characterDTO;
-    }
-
-    private Character AnsToEntity(CharacterANS character){
-        Character newCharacter = new Character();
-        newCharacter.setPkCharacterId(character.getPkCharacterId());
-        newCharacter.setName(character.getName());
-        newCharacter.setAge(character.getAge());
-        newCharacter.setHistory(character.getHistory());
-        newCharacter.setImage(character.getImage());
-        newCharacter.setWeiht(character.getWeight());
-        return newCharacter;
-    }
-    private CharacterANS EntirytoANS(Character character){
-        CharacterANS newCharacter = new CharacterANS();
-        newCharacter.setPkCharacterId(character.getPkCharacterId());
-        newCharacter.setName(character.getName());
-        newCharacter.setAge(character.getAge());
-        newCharacter.setHistory(character.getHistory());
-        newCharacter.setImage(character.getImage());
-        newCharacter.setWeight(character.getWeiht());
-        return newCharacter;
-    }
-    private Movie MappingToEntity(MovieDTO movieDTO){
-        Movie movie1=new Movie();
-        movie1.setPkMovieId(movieDTO.getPkMovieId());
-        movie1.setImage(movieDTO.getImage());
-        movie1.setDate(movieDTO.getDate());
-        movie1.setRating(movieDTO.getRating());
-        movie1.setTitle(movieDTO.getTitle());
-
-        return movie1;
-    }
-
-    private CharacterFilter MappingToFilter(Character character){
-        CharacterFilter characterFilter=new CharacterFilter();
-        characterFilter.setName(character.getName());
-        characterFilter.setImage(character.getImage());
-        return characterFilter;
-    }
 
 
 }

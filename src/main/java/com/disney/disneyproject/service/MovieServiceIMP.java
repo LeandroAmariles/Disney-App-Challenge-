@@ -1,14 +1,18 @@
 package com.disney.disneyproject.service;
 
+import com.disney.disneyproject.DTO.CharacterDTO;
+import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.entities.Character;
 import com.disney.disneyproject.entities.Movie;
+import com.disney.disneyproject.exceptions.ResourceNotFoundException;
 import com.disney.disneyproject.repository.CharacterRepository;
 import com.disney.disneyproject.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceIMP implements MovieService{
@@ -18,6 +22,9 @@ public class MovieServiceIMP implements MovieService{
 
     @Autowired
     private CharacterRepository characterRepository;
+
+    @Autowired
+    private Mapper mapper;
 
     @Override
     public List<Movie> GetMovies() {
@@ -33,7 +40,7 @@ public class MovieServiceIMP implements MovieService{
 
     @Override
     public MovieDTO CreatingMovie(MovieDTO movieDTO, List<Character> characterList) {
-        Movie movie = MappingToEntity(movieDTO);
+        Movie movie = mapper.MappingToEntity(movieDTO);
         movie.setAssociateCharacters(characterList);
         movieRepository.save(movie);
         return movieDTO;
@@ -44,25 +51,15 @@ public class MovieServiceIMP implements MovieService{
         return null;
     }
 
-    public MovieDTO MappingToDTO(Movie movie){
-        MovieDTO movieDTO = new MovieDTO();
-        movieDTO.setPkMovieId(movie.getPkMovieId());
-        movieDTO.setDate(movie.getDate());
-        movieDTO.setImage(movie.getImage());
-        movieDTO.setRating(movie.getRating());
-        movieDTO.setTitle(movie.getTitle());
-
-        return movieDTO;
-
+    @Override
+    public MovieANS GetMovieDetails(long idMovie) {
+        Movie movie = movieRepository.findById(idMovie).orElseThrow(()-> new ResourceNotFoundException("Movie","id",idMovie));
+        List<Character> characters = movie.getAssociateCharacters();
+        List<CharacterDTO> characterDTOS = characters.stream().map(character -> mapper.mappingDTO(character)).collect(Collectors.toList());
+        MovieANS movieANS = mapper.MappingToAns(movie);
+        movieANS.setAssociateCharacters(characterDTOS);
+        return movieANS;
     }
-    public Movie MappingToEntity(MovieDTO movieDTO){
-        Movie movie1=new Movie();
-        movie1.setPkMovieId(movieDTO.getPkMovieId());
-        movie1.setImage(movieDTO.getImage());
-        movie1.setDate(movieDTO.getDate());
-        movie1.setRating(movieDTO.getRating());
-        movie1.setTitle(movieDTO.getTitle());
 
-        return movie1;
-    }
+
 }

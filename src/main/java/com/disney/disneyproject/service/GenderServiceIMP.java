@@ -12,26 +12,15 @@ public class GenderServiceIMP implements GenderService{
     @Autowired
     private GenderRepository genderRepository;
 
+    @Autowired
+    private Mapper mapper;
+
 
     @Override
     public GenderDTO CreateGender(GenderDTO genderDTO) {
-        Gender gender = MappingToEntity(genderDTO);
+        Gender gender = mapper.MappingToEntity(genderDTO);
         genderRepository.save(gender);
         return genderDTO;
     }
 
-    private GenderDTO MappingToDTO(Gender gender){
-        GenderDTO genderDTO = new GenderDTO();
-        genderDTO.setGenderId(gender.getPkGenderId());
-        genderDTO.setName(gender.getName());
-
-        return genderDTO;
-    }
-
-    private Gender MappingToEntity(GenderDTO genderDTO){
-        Gender gender = new Gender();
-        gender.setName(genderDTO.getName());
-        gender.setPkGenderId(genderDTO.getGenderId());
-        return gender;
-    }
 }

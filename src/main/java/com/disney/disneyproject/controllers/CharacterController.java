@@ -38,20 +38,26 @@ public class CharacterController {
         characterService.DeleteCharacterById(id);
 
     }
-    @GetMapping("/details/{id}")
+    @GetMapping("/character_details/{id}")
     public ResponseEntity<CharacterANS> CharacterDetails(@PathVariable long id){
         return new ResponseEntity<>(characterService.CharacterDetails(id), HttpStatus.OK);
     }
 
-    @GetMapping("/Characters/{name}")
-    public ResponseEntity<List<CharacterFilter>> filterByName(@PathVariable String name){
-        return new ResponseEntity<>(characterService.findByName(name),HttpStatus.OK);
+    @GetMapping("/characters/{name}/{age}/{movieId}")
+    public ResponseEntity<Set<CharacterFilter>> filter(@PathVariable String name,@PathVariable int age, @PathVariable long movieId){
+        if( name == null &&  age != 0  && movieId == 0){
+            return ResponseEntity.ok(characterService.findByAge(age));
+        }
+        else if (name!=null && age == 0 && movieId == 0) {
+            return ResponseEntity.ok(characterService.findByName(name));
+        }
+        else {
+            return ResponseEntity.ok(characterService.GetCharactersFilter());
+        }
+
     }
 
-    @GetMapping(params="age")
-    public ResponseEntity<List<CharacterDTO>> filterByAge(@RequestParam(value = "age") int age){
-        return new ResponseEntity<>(characterService.findByAge(age),HttpStatus.OK);
-    }
+
 
 
 }

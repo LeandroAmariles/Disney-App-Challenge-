@@ -1,5 +1,6 @@
 package com.disney.disneyproject.service;
 
+import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.entities.Character;
 import com.disney.disneyproject.entities.Movie;
@@ -18,4 +19,6 @@ public interface MovieService {
 
 
     public MovieDTO AssiciatingCharacters(MovieDTO movieDTO, long characterID);
+
+    public MovieANS GetMovieDetails(long idMovie);
 }
