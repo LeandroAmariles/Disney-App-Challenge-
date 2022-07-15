@@ -34,6 +34,6 @@ public interface MovieService {
 
     public MovieFilter findByDate(Date date);
 
-    public MovieANS AddOrDeleteCharacter(long idMovie, long idCharcater);
+    public MovieANS AddCharacter(long idMovie, long idCharcater);
 
 }
