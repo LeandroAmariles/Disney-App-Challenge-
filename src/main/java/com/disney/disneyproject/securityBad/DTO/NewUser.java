@@ -17,12 +17,11 @@ public class NewUser {
     private String password;
     private Set<String> roles = new HashSet<>();
 
-    public NewUser(String name, String userName, String mail, String password, Set<String> roles) {
+    public NewUser(String name, String userName, String mail, String password) {
         this.name = name;
         this.userName = userName;
         this.mail = mail;
         this.password = password;
-        this.roles = roles;
     }
 
     public String getName() {

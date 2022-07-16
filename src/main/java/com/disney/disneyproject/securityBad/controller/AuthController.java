@@ -76,9 +76,9 @@ public class AuthController {
             return new ResponseEntity<>(new MessageFormat("Check the fields again"), HttpStatus.BAD_REQUEST);
         User user = new User(newUser.getUserName(), newUser.getMail(),passwordEncoder.encode(newUser.getPassword()));
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.GetByRoleName(RoleList.ROLE_USER).get());
+        roles.add(roleService.GetByRoleName(RoleList.USER).get());
         if(newUser.getRoles().contains("admin"))
-            roles.add(roleService.GetByRoleName(RoleList.ROLE_ADMIN).orElseThrow());
+            roles.add(roleService.GetByRoleName(RoleList.ADMIN).get());
             user.setRoles(roles);
             userService.SaveUser(user);
         return new ResponseEntity<>(new MessageFormat("Register successful "),HttpStatus.CREATED);

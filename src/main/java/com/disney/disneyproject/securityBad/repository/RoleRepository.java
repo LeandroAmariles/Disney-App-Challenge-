@@ -5,6 +5,7 @@ import com.disney.disneyproject.securityBad.entities.Role;
 import com.disney.disneyproject.securityBad.enums.RoleList;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 

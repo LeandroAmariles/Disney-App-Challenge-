@@ -108,12 +108,31 @@ public class MovieServiceIMP implements MovieService{
     }
 
     @Override
-    public MovieANS AddCharacter(long idMovie, long idCharcater) {
+    public MovieANS AddCharacter(long idMovie, long idCharacter, CharacterDTO characterDTO) {
         Movie movie=movieRepository.findById(idMovie).orElseThrow(()-> new ResourceNotFoundException("Movie","id",idMovie));
         List<Character> characters = movie.getAssociateCharacters();
+        Character character1= mapper.mappingEntity(characterDTO);
+        characters.add(character1);
+        characterRepository.save(character1);
         List<CharacterDTO>  list = characters.stream().map(character -> mapper.mappingDTO(character)).collect(Collectors.toList());
         MovieANS movieANS = mapper.MappingToAns(movie);
-        return null;
+        movieANS.setAssociateCharacters(list);
+        return movieANS;
+    }
+
+    @Override
+    public MovieANS DeleteCharacter(long idMovie, long idCharacter) {
+        Movie movie = movieRepository.findById(idMovie).orElseThrow(()-> new ResourceNotFoundException("Movie","id",idMovie));
+        List<Character> characters = movie.getAssociateCharacters();
+        for (Character x:characters) {
+            if(x.getPkCharacterId()==idCharacter){
+                characters.remove(x);
+
+            }
+        }
+        movie.setAssociateCharacters(characters);
+        MovieANS movieANS = mapper.MappingToAns(movie);
+        return movieANS;
     }
 
 

@@ -1,6 +1,7 @@
 package com.disney.disneyproject.controllers;
 
 
+import com.disney.disneyproject.DTO.CharacterDTO;
 import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.DTO.MovieFilter;
@@ -55,5 +56,13 @@ public class MovieController {
     @GetMapping("/filter_date/{date}")
     public ResponseEntity<MovieFilter> FilterByMovieDate(@PathVariable Date date){
         return new ResponseEntity<>(movieService.findByDate(date),HttpStatus.OK);
+    }
+    @PostMapping("/movies/{id_movie}/characters/{id_character}")
+    public ResponseEntity<MovieANS> AddCharacter(@PathVariable("id_movie") long id_movie, @PathVariable("id_character") long id_character, @RequestBody CharacterDTO characterDTO){
+        return new ResponseEntity<>(movieService.AddCharacter(id_movie,id_character,characterDTO),HttpStatus.OK);
+    }
+    @DeleteMapping("/movies/{id_movie}/characters/{id_character}")
+    public ResponseEntity<MovieANS> DeleteCharacter(@PathVariable long id_movie, @PathVariable long id_character){
+        return new ResponseEntity<>(movieService.DeleteCharacter(id_movie,id_character),HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.disney.disneyproject.service;
 
+import com.disney.disneyproject.DTO.CharacterDTO;
 import com.disney.disneyproject.DTO.MovieANS;
 import com.disney.disneyproject.DTO.MovieDTO;
 import com.disney.disneyproject.DTO.MovieFilter;
@@ -34,6 +35,8 @@ public interface MovieService {
 
     public MovieFilter findByDate(Date date);
 
-    public MovieANS AddCharacter(long idMovie, long idCharcater);
+    public MovieANS AddCharacter(long idMovie, long idCharacter, CharacterDTO characterDTO);
+
+    public MovieANS DeleteCharacter(long idMovie, long idCharacter);
 
 }
