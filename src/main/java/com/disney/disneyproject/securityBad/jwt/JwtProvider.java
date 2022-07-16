@@ -1,16 +1,14 @@
-package security.jwt;
+package com.disney.disneyproject.securityBad.jwt;
 
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import security.entities.MainUser;
+import com.disney.disneyproject.securityBad.entities.MainUser;
 
-import java.awt.dnd.DropTarget;
 import java.util.Date;
 
 
@@ -24,7 +22,7 @@ public class JwtProvider {
     private String secret;
 
     // Base time of expiration
-    @Value("${jwt.expiration")
+    @Value("${jwt.expiration}")
     private int expiration;
     // Make a token with the parameters in application.properties
     public String generateToken(Authentication authentication){

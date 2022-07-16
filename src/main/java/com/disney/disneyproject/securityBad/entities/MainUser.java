@@ -1,4 +1,4 @@
-package security.entities;
+package com.disney.disneyproject.securityBad.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

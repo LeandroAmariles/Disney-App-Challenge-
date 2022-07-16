@@ -1,6 +1,5 @@
-package security.jwt;
+package com.disney.disneyproject.securityBad.jwt;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
-package security.entities;
+package com.disney.disneyproject.securityBad.entities;
 
-import security.enums.RoleList;
+import com.disney.disneyproject.securityBad.enums.RoleList;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

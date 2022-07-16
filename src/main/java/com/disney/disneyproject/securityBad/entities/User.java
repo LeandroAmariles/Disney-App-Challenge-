@@ -1,6 +1,4 @@
-package security.entities;
-
-import org.hibernate.annotations.GenericGenerator;
+package com.disney.disneyproject.securityBad.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,8 +10,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(generator="UUID")
-    @GenericGenerator(name="UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotNull
@@ -25,7 +22,7 @@ public class User {
     private String email;
 
     @NotNull
-    private String Password;
+    private String password;
 
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
@@ -37,12 +34,15 @@ public class User {
 
     }
 
-    public User(String userName, String email, String password, Set<Role> roles) {
+    public User(@NotNull String userName, @NotNull String email, @NotNull String password) {
         this.userName = userName;
         this.email = email;
-        Password = password;
-        this.roles = roles;
+        this.password = password;
+
     }
+
+
+
 
     public long getId() {
         return id;
@@ -69,11 +69,11 @@ public class User {
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public Set<Role> getRoles() {
